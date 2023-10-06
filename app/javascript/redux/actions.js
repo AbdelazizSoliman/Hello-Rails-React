@@ -1,8 +1,26 @@
 // app/javascript/redux/actions.js
+import axios from 'axios';
+
 export const FETCH_GREETING = 'FETCH_GREETING';
 
+export function fetchGreetingSuccess(message) {
+  return {
+    type: FETCH_GREETING,
+    payload: message,
+  };
+}
+
 export function fetchGreeting() {
-  // Implement your API fetching logic here
-  // You can use libraries like axios or fetch for API calls
-  // Dispatch FETCH_GREETING action with the fetched data
+  return (dispatch) => {
+    // Make an API request to your Rails API endpoint
+    axios.get('/api/greetings/random')
+      .then((response) => {
+        // Dispatch the FETCH_GREETING action with the fetched message
+        dispatch(fetchGreetingSuccess(response.data.message));
+      })
+      .catch((error) => {
+        // Handle any errors here if needed
+        console.error('Error fetching greeting:', error);
+      });
+  };
 }
